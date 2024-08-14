@@ -12,6 +12,12 @@ Route::get('/absent', [AbsentController::class, 'absent']);
 Route::post('/absent', [AbsentController::class, 'absentAction']);
 
 Route::middleware(AdminMiddleware::class)->group(function () {
-    Route::get('/dashboard', [AdminController::class, 'Dashboard']);
+    Route::prefix('/dashboard')->group(function () {
+        Route::get('/', [AdminController::class, 'Dashboard']);
+        Route::get('/kelola-siswa', [AdminController::class, 'ManageStudents']);
+    });
+
+
+
     Route::get('/auth/logout', [AuthController::class, 'Logout']);
 });

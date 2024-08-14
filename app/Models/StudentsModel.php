@@ -19,7 +19,7 @@ class StudentsModel extends Model
 
     function devision()
     {
-        return $this->belongsTo(DevisionModel::class, 'devision_id', 'id');
+        return $this->belongsTo(DevisionModel::class, 'devisi_id', 'id');
     }
 
     function absents()
