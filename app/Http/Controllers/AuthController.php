@@ -17,15 +17,21 @@ class AuthController extends Controller
     {
         $email = $request->email;
         $password = $request->password;
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required'
+        ]);
 
         $user = AdminModel::where('email', $email)->first();
         if ($user) {
             if (Hash::check($password, $user->password)) {
                 Auth::login($user);
                 return redirect()->to('/dashboard');
+            } else {
+                return back()->with('error', 'Username / password wrong !');
             }
         } else {
-            return back()->with('error', 'Email is not found');
+            return back()->with('error', 'Username / password wrong !');
         }
     }
     function Logout()

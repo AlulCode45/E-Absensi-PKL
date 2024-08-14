@@ -10,7 +10,7 @@
         integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-    <script src="https://cdn.tailwindcss.com"></script>
+    @vite('resources/css/app.css')
     <link rel="stylesheet" href="//cdn.datatables.net/2.1.3/css/dataTables.dataTables.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.3/css/dataTables.bootstrap5.css">
@@ -57,15 +57,9 @@
                             class="rounded-full w-10 h-10">
                     </div>
                     <div class="absolute scale-0 transition-all duration-150 -bottom-[5.9rem] z-20 right-0 w-44">
-                        <div class="bg-white px-3 py-3 shadow ">
-                            <ul class="flex flex-col gap-2">
-                                <li>
-                                    <a href="">Profile</a>
-                                </li>
-                                <li>
-                                    <a href="/auth/logout">Logout</a>
-                                </li>
-                            </ul>
+                        <div class="bg-white p-3 shadow flex flex-col gap-2">
+                            <a class="text-decoration-none text-black" href="">Profile</a>
+                            <a class="text-decoration-none text-black" href="/auth/logout">Logout</a>
                         </div>
                     </div>
                 </div>

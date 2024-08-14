@@ -11,7 +11,7 @@ class AbsentsModel extends Model
     use HasFactory;
     protected $table = 'absents';
     protected $guarded = ['id'];
-    public $timestamps = false;
+    public $timestamps = true;
 
     function students()
     {
