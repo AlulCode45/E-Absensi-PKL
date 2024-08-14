@@ -14,12 +14,35 @@ Route::post('/absent', [AbsentController::class, 'absentAction']);
 Route::middleware(AdminMiddleware::class)->group(function () {
     Route::prefix('/dashboard')->group(function () {
         Route::get('/', [AdminController::class, 'Dashboard']);
-        Route::get('/kelola-siswa', [AdminController::class, 'ManageStudents']);
-        Route::get('/kelola-siswa/{id}', [AdminController::class, 'viewStudent']);
-        Route::post('/kelola-siswa/add', [AdminController::class, 'addStudent'])->name('add-student');
-        Route::get('/edit-student/{id}', [AdminController::class, 'editStudent']);
-        Route::get('/delete-student/{id}', [AdminController::class, 'deleteStudent']);
-        Route::post('/edit-student/{id}', [AdminController::class, 'updateStudent'])->name('update-student');
+        Route::prefix('/kelola-siswa')->group(function () {
+            Route::get('/', [AdminController::class, 'ManageStudents']);
+            Route::get('/{id}', [AdminController::class, 'viewStudent']);
+            Route::post('/add', [AdminController::class, 'addStudent'])->name('add-student');
+            Route::get('/edit/{id}', [AdminController::class, 'editStudent']);
+            Route::get('/delete/{id}', [AdminController::class, 'deleteStudent']);
+            Route::post('/edit/{id}', [AdminController::class, 'updateStudent'])->name('update-student');
+        });
+
+        Route::prefix('/kelola-devisi')->group(function () {
+            Route::get('/', [AdminController::class, 'ManageDivisions']);
+            Route::post('/add', [AdminController::class, 'addDivision'])->name('add-division');
+            Route::get('/edit/{id}', [AdminController::class, 'editDivision']);
+            Route::post('/edit/{id}', [AdminController::class, 'updateDivision'])->name('update-division');
+            Route::get('/delete/{id}', [AdminController::class, 'deleteDivision']);
+        });
+
+        Route::prefix('/kelola-sekolah')->group(function () {
+            Route::get('/', [AdminController::class, 'ManageSchools']);
+            Route::post('/add', [AdminController::class, 'addSchool'])->name('add-school');
+            Route::get('/edit/{id}', [AdminController::class, 'editSchool']);
+            Route::post('/edit/{id}', [AdminController::class, 'updateSchool'])->name('update-school');
+            Route::get('/delete/{id}', [AdminController::class, 'deleteSchool']);
+        });
+
+        Route::prefix('/kelola-absensi')->group(function () {
+            Route::get('/', [AdminController::class, 'ManageAbsents']);
+            Route::get('/delete-absent/{id}', [AdminController::class, 'deleteAbsent']);
+        });
     });
 
 

@@ -28,14 +28,14 @@
                     <tr>
                         <td>{{ $d->name }}</td>
                         <td>{{ $d->nisn }}</td>
-                        <td>{{ $d->school->name }}</td>
-                        <td>{{ $d->devision->name }}</td>
+                        <td>{{ $d->school ? $d->school->name : 'N/A' }}</td>
+                        <td>{{ $d->devision ? $d->devision->name : 'N/A' }}</td>
                         <td class="flex gap-2">
                             <a href="/dashboard/kelola-siswa/{{ $d->id }}"
                                 class="bg-blue-400 p-2 text-white px-3 text-decoration-none">Lihat</a>
-                            <a href="/dashboard/edit-student/{{ $d->id }}"
+                            <a href="/dashboard/kelola-siswa/edit/{{ $d->id }}"
                                 class="bg-warning p-2 text-white px-3 text-decoration-none">Edit</a>
-                            <a href="/dashboard/delete-student/{{ $d->id }}"
+                            <a href="/dashboard/kelola-siswa/delete/{{ $d->id }}"
                                 class="bg-red-400 p-2 text-white px-3 text-decoration-none">Hapus</a>
                         </td>
                     </tr>
