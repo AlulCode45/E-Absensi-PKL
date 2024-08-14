@@ -15,6 +15,11 @@ Route::middleware(AdminMiddleware::class)->group(function () {
     Route::prefix('/dashboard')->group(function () {
         Route::get('/', [AdminController::class, 'Dashboard']);
         Route::get('/kelola-siswa', [AdminController::class, 'ManageStudents']);
+        Route::get('/kelola-siswa/{id}', [AdminController::class, 'viewStudent']);
+        Route::post('/kelola-siswa/add', [AdminController::class, 'addStudent'])->name('add-student');
+        Route::get('/edit-student/{id}', [AdminController::class, 'editStudent']);
+        Route::get('/delete-student/{id}', [AdminController::class, 'deleteStudent']);
+        Route::post('/edit-student/{id}', [AdminController::class, 'updateStudent'])->name('update-student');
     });
 
 
