@@ -18,22 +18,19 @@
                     <h1 class="text-4xl font-bold text-center mb-1">E - Absensi</h1>
                     <p class="text-center mb-7">Aplikasi absensi siswa magang HUMMATECH</p>
                     @include('template.message')
-                    <di`` class="form-group my-2">
+                    <div class="form-group my-2">
                         <label for="" class="block">Email</label>
                         <input type="text"
                             class="p-2 border mt-2 w-full focus:outline focus:outline-blue-700 rounded-sm"
                             placeholder="Email" name="email">
-                        </di>
-                        <div class="form-group my-2">
-                            <label for="" class="block">Password</label>
-                            <input type="password"
-                                class="p-2 border mt-2 w-full focus:outline focus:outline-blue-700 rounded-sm"
-                                placeholder="Password" name="password">
-                        </div>
-                        <p class="text-gray-500 my-3 ">Tidak memiliki akun? <a href=""
-                                class="text-blue-500">Daftar</a>
-                        </p>
-                        <button class="bg-blue-500 p-3 w-full font-bold text-white mt-3" type="submit">Masuk</button>
+                    </div>
+                    <div class="form-group my-2">
+                        <label for="" class="block">Password</label>
+                        <input type="password"
+                            class="p-2 border mt-2 w-full focus:outline focus:outline-blue-700 rounded-sm"
+                            placeholder="Password" name="password">
+                    </div>
+                    <button class="bg-blue-500 p-3 w-full font-bold text-white mt-3" type="submit">Masuk</button>
                 </div>
             </form>
             <div class="absolute top-0 -right-[270px]">

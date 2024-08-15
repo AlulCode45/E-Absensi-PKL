@@ -31,12 +31,11 @@
                         <td>{{ $d->school ? $d->school->name : 'N/A' }}</td>
                         <td>{{ $d->devision ? $d->devision->name : 'N/A' }}</td>
                         <td class="flex gap-2">
-                            <a href="/dashboard/kelola-siswa/{{ $d->id }}"
-                                class="bg-blue-400 p-2 text-white px-3 text-decoration-none">Lihat</a>
                             <a href="/dashboard/kelola-siswa/edit/{{ $d->id }}"
                                 class="bg-warning p-2 text-white px-3 text-decoration-none">Edit</a>
                             <a href="/dashboard/kelola-siswa/delete/{{ $d->id }}"
-                                class="bg-red-400 p-2 text-white px-3 text-decoration-none">Hapus</a>
+                                class="bg-red-400 p-2 text-white px-3 text-decoration-none"
+                                onclick="confirmDelete(event, this.href)">Hapus</a>
                         </td>
                     </tr>
                 @endforeach
@@ -53,22 +52,18 @@
         </table>
     </div>
 
-    <div
-        class="z-50 bg-black/40 w-screen h-screen absolute top-0 left-0 -translate-y-[100%] transition-all duration-500 place-content-center">
-        <div class="modal-container bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
+    <div class="overlay fixed inset-0 bg-black/40 z-40 hidden opacity-0 transition-opacity duration-300" id="modal-overlay">
+    </div>
+
+    <div class="modal-container fixed z-50 w-screen h-screen top-0 left-0 flex items-center justify-center hidden"
+        id="modal-container">
+        <div
+            class="modal-content bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg overflow-y-auto translate-y-[-100%] opacity-0 transition-all duration-500 ease-out">
             <!-- Add modal content here -->
-            <div class="modal-content py-4 text-left px-6">
+            <div class="py-4 text-left px-6">
                 <div class="flex justify-between items-center pb-3">
-                    <div class="flex justify-between w-full items-center">
-                        <p class="text-2xl font-bold">Tambah Siswa</p>
-                        <i class="fa fa-times text-xl" onclick="hideModal()"></i>
-                    </div>
-                    <div class="modal-close cursor-pointer z-50">
-                        <svg class="fill-current text-black" xmlns="http://www.w3.org/2000/svg" width="18"
-                            height="18" viewBox="0 0 18 18">
-                            <path d="M1.39 1.393l15.318 15.314m-15.318 0L16.706 1.393" />
-                        </svg>
-                    </div>
+                    <p class="text-2xl font-bold">Tambah Siswa</p>
+                    <i class="fa fa-times text-xl cursor-pointer" onclick="hideModal()"></i>
                 </div>
 
                 <form action="{{ route('add-student') }}" method="post">
@@ -77,13 +72,13 @@
                         <div class="form-group w-full">
                             <label for="" class="block text-sm mb-2">Nama Siswa</label>
                             <input type="text" name="nama"
-                                class="p-2 border w-full focus:outline focus:outline-blue-400 rounded-sm "
+                                class="p-2 border w-full focus:outline focus:outline-blue-400 rounded-sm"
                                 placeholder="Nama Siswa">
                         </div>
                         <div class="form-group w-full">
                             <label for="" class="block text-sm mb-2">NISN</label>
                             <input type="number" name="nisn"
-                                class="p-2 border w-full focus:outline focus:outline-blue-400 rounded-sm "
+                                class="p-2 border w-full focus:outline focus:outline-blue-400 rounded-sm"
                                 placeholder="NISN">
                         </div>
                     </div>
@@ -91,7 +86,7 @@
                         <div class="form-group w-full">
                             <label for="" class="block text-sm mb-2">Asal Sekolah</label>
                             <select name="sekolah"
-                                class="p-2 border w-full focus:outline focus:outline-blue-400 rounded-sm ">
+                                class="p-2 border w-full focus:outline focus:outline-blue-400 rounded-sm">
                                 <option value="">Pilih Sekolah</option>
                                 @foreach (\App\Models\SchoolsModel::all() as $school)
                                     <option value="{{ $school->id }}">
@@ -102,7 +97,7 @@
                         <div class="form-group w-full">
                             <label for="" class="block text-sm mb-2">Devisi</label>
                             <select name="devisi"
-                                class="p-2 border w-full focus:outline focus:outline-blue-400 rounded-sm ">
+                                class="p-2 border w-full focus:outline focus:outline-blue-400 rounded-sm">
                                 <option value="">Pilih Devisi</option>
                                 @foreach (\App\Models\DevisionModel::all() as $devisi)
                                     <option value="{{ $devisi->id }}">
@@ -113,38 +108,49 @@
                     </div>
                     <button class="bg-blue-400 px-4 py-2 mt-2 text-white font-semibold">Simpan</button>
                 </form>
-
-                {{-- <div class="mt-4 flex justify-end">
-                    <button class="modal-close px-4 bg-gray-100 p-2 rounded-lg text-black hover:bg-gray-200">Cancel</button>
-                    <button class="px-4 bg-blue-500 p-2 ml-3 rounded-lg text-white hover:bg-purple-400">Save</button>
-                </div> --}}
             </div>
         </div>
     </div>
 
+
     <script>
-        $(document).ready(function() {
-            $('#example').DataTable();
-        });
-
         function showModal() {
-            document.querySelector('.z-50').classList.remove('-translate-y-[100%]');
-            document.querySelector('.z-50').classList.add('translate-y-0');
+            const overlay = document.getElementById('modal-overlay');
+            overlay.classList.remove('hidden');
+            setTimeout(() => {
+                overlay.classList.remove('opacity-0');
+                overlay.classList.add('opacity-100');
+            }, 10); // Sedikit delay untuk memastikan animasi berjalan
 
-            // document.querySelector('.z-50').classList.remove('hidden');
-            // document.querySelector('.z-50').classList.add('grid');
-            // document.querySelector('.z-50').classList.add('transition-all');
-            // document.querySelector('.z-50').classList.add('duration-150');
+            // Setelah overlay ditampilkan, munculkan modal dengan efek slide dan fade-in
+            const modalContainer = document.getElementById('modal-container');
+            const modalContent = document.querySelector('.modal-content');
+            modalContainer.classList.remove('hidden');
+
+            setTimeout(() => {
+                modalContent.classList.remove('translate-y-[-100%]', 'opacity-0');
+                modalContent.classList.add('translate-y-0', 'opacity-100');
+            }, 300); // Delay untuk menunggu overlay selesai ditampilkan
         }
 
         function hideModal() {
-            document.querySelector('.z-50').classList.add('-translate-y-[100%]');
-            document.querySelector('.z-50').classList.remove('translate-y-0');
+            // Sembunyikan modal dengan animasi slide dan fade-out
+            const modalContent = document.querySelector('.modal-content');
+            modalContent.classList.add('translate-y-[-100%]', 'opacity-0');
+            modalContent.classList.remove('translate-y-0', 'opacity-100');
 
-            // document.querySelector('.z-50').classList.add('hidden');
-            // document.querySelector('.z-50').classList.remove('grid');
-            // document.querySelector('.z-50').classList.remove('transition-all');
-            // document.querySelector('.z-50').classList.remove('duration-150');
+            // Setelah modal disembunyikan, sembunyikan overlay dengan fade-out
+            setTimeout(() => {
+                const overlay = document.getElementById('modal-overlay');
+                const modalContainer = document.getElementById('modal-container');
+                overlay.classList.add('opacity-0');
+                overlay.classList.remove('opacity-100');
+
+                setTimeout(() => {
+                    overlay.classList.add('hidden');
+                    modalContainer.classList.add('hidden');
+                }, 300); // Waktu delay disamakan dengan durasi transition
+            }, 500); // Waktu delay disamakan dengan durasi transition modal
         }
     </script>
 @endsection

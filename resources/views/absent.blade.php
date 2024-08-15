@@ -24,6 +24,10 @@
                             class="p-2 border mt-2 w-full focus:outline focus:outline-blue-700 rounded-sm"
                             placeholder="NISN Siswa" name="nisn">
                     </div>
+
+                    <p class="text-gray-500 my-3 ">Tidak memiliki akun? <a href="/register"
+                            class="text-blue-500">Daftar</a>
+                    </p>
                     <button class="bg-blue-500 p-3 w-full font-bold text-white mt-3" type="submit">Absen</button>
                 </div>
             </form>

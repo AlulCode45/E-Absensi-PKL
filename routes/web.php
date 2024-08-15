@@ -10,9 +10,14 @@ Route::get('/', [AuthController::class, 'Login']);
 Route::post('/login', [AuthController::class, 'LoginAction']);
 Route::get('/absent', [AbsentController::class, 'absent']);
 Route::post('/absent', [AbsentController::class, 'absentAction']);
+//register
+Route::get('/register', [AuthController::class, 'Register']);
+Route::post('/register', [AuthController::class, 'RegisterAction']);
 
 Route::middleware(AdminMiddleware::class)->group(function () {
     Route::prefix('/dashboard')->group(function () {
+        Route::get('/settings', [AdminController::class, 'settings']);
+        Route::post('/settings', [AdminController::class, 'updateSettings'])->name('updateSettings');
         Route::get('/', [AdminController::class, 'Dashboard']);
         Route::prefix('/kelola-siswa')->group(function () {
             Route::get('/', [AdminController::class, 'ManageStudents']);

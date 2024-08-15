@@ -47,7 +47,7 @@
                 </div>
             </div>
             <div class="flex justify-end mb-2">
-                <a href="/dashboard/edit-student/{{ $student->id }}"
+                <a href="/dashboard/kelola-siswa/edit/{{ $student->id }}"
                     class="bg-blue-400 px-4 py-2 text-white font-semibold text-decoration-none">Edit Data</a>
             </div>
         </form>

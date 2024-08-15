@@ -42,6 +42,10 @@
                         class="flex gap-3 items-center p-3 hover:scale-105 transition-all duration-150 hover:bg-blue-700/20 hover:font-semibold text-decoration-none text-black">
                         <i class="fa fa-check text-gray-500"></i> Kelola Absensi
                     </a>
+                    <a href="/dashboard/settings"
+                        class="flex gap-3 items-center p-3 hover:scale-105 transition-all duration-150 hover:bg-blue-700/20 hover:font-semibold text-decoration-none text-black">
+                        <i class="fa fa-clock text-gray-500"></i> Pengaturan Waktu
+                    </a>
                 </div>
             </div>
         </aside>
@@ -49,15 +53,16 @@
             <nav class="w-full flex justify-between items-center gap-3">
                 <h2 class="font-bold text-xl">@yield('page-title', 'Dashboard')</h2>
                 <div class="flex gap-3 items-center relative">
-                    <span>John Doe</span>
+                    <span>{{ auth()->user()->name }}</span>
                     <div class="rounded-full w-10 h-10" id="profile-image">
-                        <img src="https://ui-avatars.com/api/?name=John+Doe" alt="profile"
+                        <img src="https://ui-avatars.com/api/?name={{ auth()->user()->name }}" alt="profile"
                             class="rounded-full w-10 h-10">
                     </div>
                     <div class="absolute scale-0 transition-all duration-150 -bottom-[5.9rem] z-20 right-0 w-44">
                         <div class="bg-white p-3 shadow flex flex-col gap-2">
-                            <a class="text-decoration-none text-black" href="">Profile</a>
-                            <a class="text-decoration-none text-black" href="/auth/logout">Logout</a>
+                            {{-- <a class="text-decoration-none text-black" href="">Profile</a> --}}
+                            <a class="text-decoration-none text-black" href="/auth/logout"
+                                onclick="confirmLogout(event, this.href)">Logout</a>
                         </div>
                     </div>
                 </div>
@@ -81,6 +86,22 @@
                 $('.absolute').toggleClass('scale-100');
             });
         });
+
+        function confirmDelete(event, url) {
+            event.preventDefault(); // Mencegah default action dari link
+            const confirmed = confirm("Apakah Anda yakin ingin menghapus data ini?");
+            if (confirmed) {
+                window.location.href = url; // Redirect ke URL penghapusan jika dikonfirmasi
+            }
+        }
+
+        function confirmLogout(event, url) {
+            event.preventDefault(); // Mencegah default action dari link
+            const confirmed = confirm("Apakah Anda yakin ingin keluar?");
+            if (confirmed) {
+                window.location.href = url; // Redirect ke URL penghapusan jika dikonfirmasi
+            }
+        }
     </script>
 </body>
 

@@ -28,7 +28,8 @@
                             <a href="/dashboard/kelola-devisi/edit/{{ $d->id }}"
                                 class="bg-warning p-2 text-white px-3 text-decoration-none">Edit</a>
                             <a href="/dashboard/kelola-devisi/delete/{{ $d->id }}"
-                                class="bg-red-400 p-2 text-white px-3 text-decoration-none">Hapus</a>
+                                class="bg-red-400 p-2 text-white px-3 text-decoration-none"
+                                onclick="confirmDelete(event, this.href)">Hapus</a>
                         </td>
                     </tr>
                 @endforeach
@@ -41,16 +42,19 @@
             </tfoot>
         </table>
     </div>
+    <div class="overlay fixed inset-0 bg-black/40 z-40 hidden opacity-0 transition-opacity duration-300" id="modal-overlay">
+    </div>
 
-    <div
-        class="z-50 bg-black/40 w-screen h-screen absolute top-0 left-0 -translate-y-[100%] transition-all duration-500 place-content-center">
-        <div class="modal-container bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
+    <div class="modal-container fixed z-50 w-screen h-screen top-0 left-0 flex items-center justify-center hidden"
+        id="modal-container">
+        <div
+            class="modal-content bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg overflow-y-auto translate-y-[-100%] opacity-0 transition-all duration-500 ease-out">
             <!-- Add modal content here -->
-            <div class="modal-content py-4 text-left px-6">
+            <div class="py-4 text-left px-6">
                 <div class="flex justify-between items-center pb-3">
                     <div class="flex justify-between w-full items-center">
                         <p class="text-2xl font-bold">Tambah Devisi</p>
-                        <i class="fa fa-times text-xl" onclick="hideModal()"></i>
+                        <i class="fa fa-times text-xl cursor-pointer" onclick="hideModal()"></i>
                     </div>
                     <div class="modal-close cursor-pointer z-50">
                         <svg class="fill-current text-black" xmlns="http://www.w3.org/2000/svg" width="18"
@@ -65,8 +69,8 @@
                     <div class="form-group w-full">
                         <label for="" class="block text-sm mb-2">Nama Devisi</label>
                         <input type="text" name="name"
-                            class="p-2 border w-full focus:outline focus:outline-blue-400 rounded-sm "
-                            placeholder="Name Devisi">
+                            class="p-2 border w-full focus:outline focus:outline-blue-400 rounded-sm"
+                            placeholder="Nama Devisi">
                     </div>
                     <button class="bg-blue-400 px-4 py-2 mt-2 text-white font-semibold">Simpan</button>
                 </form>
@@ -75,28 +79,44 @@
     </div>
 
     <script>
-        $(document).ready(function() {
-            $('#example').DataTable();
-        });
-
         function showModal() {
-            document.querySelector('.z-50').classList.remove('-translate-y-[100%]');
-            document.querySelector('.z-50').classList.add('translate-y-0');
+            // Tampilkan overlay dengan efek fade-in
+            const overlay = document.getElementById('modal-overlay');
+            overlay.classList.remove('hidden');
+            setTimeout(() => {
+                overlay.classList.remove('opacity-0');
+                overlay.classList.add('opacity-100');
+            }, 10);
 
-            // document.querySelector('.z-50').classList.remove('hidden');
-            // document.querySelector('.z-50').classList.add('grid');
-            // document.querySelector('.z-50').classList.add('transition-all');
-            // document.querySelector('.z-50').classList.add('duration-150');
+            // Tampilkan modal dengan slide dan fade-in
+            const modalContainer = document.getElementById('modal-container');
+            const modalContent = document.querySelector('.modal-content');
+            modalContainer.classList.remove('hidden');
+
+            setTimeout(() => {
+                modalContent.classList.remove('translate-y-[-100%]', 'opacity-0');
+                modalContent.classList.add('translate-y-0', 'opacity-100');
+            }, 300); // Menunggu overlay selesai muncul
         }
 
         function hideModal() {
-            document.querySelector('.z-50').classList.add('-translate-y-[100%]');
-            document.querySelector('.z-50').classList.remove('translate-y-0');
+            // Sembunyikan modal dengan slide dan fade-out
+            const modalContent = document.querySelector('.modal-content');
+            modalContent.classList.add('translate-y-[-100%]', 'opacity-0');
+            modalContent.classList.remove('translate-y-0', 'opacity-100');
 
-            // document.querySelector('.z-50').classList.add('hidden');
-            // document.querySelector('.z-50').classList.remove('grid');
-            // document.querySelector('.z-50').classList.remove('transition-all');
-            // document.querySelector('.z-50').classList.remove('duration-150');
+            // Setelah modal disembunyikan, sembunyikan overlay dengan fade-out
+            setTimeout(() => {
+                const overlay = document.getElementById('modal-overlay');
+                const modalContainer = document.getElementById('modal-container');
+                overlay.classList.add('opacity-0');
+                overlay.classList.remove('opacity-100');
+
+                setTimeout(() => {
+                    overlay.classList.add('hidden');
+                    modalContainer.classList.add('hidden');
+                }, 300); // Waktu delay untuk menyembunyikan overlay
+            }, 500); // Waktu delay untuk menyembunyikan modal
         }
     </script>
 @endsection

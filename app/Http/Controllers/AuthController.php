@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AdminModel;
+use App\Models\StudentsModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -38,5 +39,31 @@ class AuthController extends Controller
     {
         Auth::logout();
         return redirect()->to('/')->with('success', 'You are logged out');
+    }
+    function Register()
+    {
+        return view('Register');
+    }
+    function RegisterAction(Request $request)
+    {
+        $request->validate([
+            'nisn' => 'required|numeric|unique:students,nisn',
+            'name' => 'required|string',
+            'school' => 'required|numeric',
+            'devisi' => 'required|numeric'
+        ]);
+
+        $data = [
+            'name' => $request->name,
+            'nisn' => $request->nisn,
+            'school_id' => $request->school,
+            'devisi_id' => $request->devisi
+        ];
+        $save = StudentsModel::create($data);
+        if ($save) {
+            return back()->with('success', 'Sukses Register Data!');
+        } else {
+            return back()->with('error', 'Gagal Register Data!');
+        }
     }
 }

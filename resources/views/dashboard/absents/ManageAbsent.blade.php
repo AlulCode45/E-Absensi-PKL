@@ -28,10 +28,19 @@
                     <tr>
                         <td>{{ $d->students->name }}</td>
                         <td>{{ $d->students->nisn }}</td>
-                        <td>{{ $d->students->school->name }}</td>
-                        <td>{{ $d->students->devision->name }}</td>
+                        <td>{{ $d->students->school ? $d->students->school->name : 'N/A' }}</td>
+                        <td>{{ $d->students->devision ? $d->students->devision->name : 'N/A' }}</td>
                         <td>{{ $d->date }}</td>
-                        <td>{{ $d->status }}</td>
+                        <td>
+                            @if ($d->status == 'Hadir' || $d->status == 'Pulang')
+                                <div class="bg-green-400/40 text-green-600 p-2 rounded-full text-xs text-center">
+                                    {{ $d->status }}
+                                </div>
+                            @else
+                                <div class="bg-red-400/40 text-red-600 p-2 rounded-full text-xs text-center">
+                                    {{ $d->status }}</div>
+                            @endif
+                        </td>
                     </tr>
                 @endforeach
             </tbody>

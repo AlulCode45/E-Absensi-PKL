@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AbsentsModel;
+use App\Models\SettingsModel;
 use App\Models\StudentsModel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -20,27 +21,69 @@ class AbsentController extends Controller
         $student = StudentsModel::where('nisn', $nisn)->first();
 
         if (!$student) {
-            return back()->with('error', 'NISN not found');
+            return back()->with('error', 'NISN tidak ditemukan');
         }
 
-        $dataBefore = AbsentsModel::where('student_id', $student->id)
+        // Ambil data absensi terakhir untuk siswa ini
+        $lastAbsent = AbsentsModel::where('student_id', $student->id)
             ->whereDate('date', Carbon::now())
+            ->orderBy('created_at', 'desc')
             ->first();
 
-        if ($dataBefore) {
-            return back()->with('error', 'You have been absent today');
+        $time = Carbon::now()->format('H:i:s');
+        $waktuMasuk = SettingsModel::where('name', 'waktu_berangkat')->first();
+        $waktuPulang = SettingsModel::where('name', 'waktu_pulang')->first();
+        $waktuMasukCarbon = Carbon::createFromFormat('H:i:s', $waktuMasuk->value);
+        $batasTerlambat = $waktuMasukCarbon->copy()->addMinutes(30);
+
+        // Jika sudah absen berangkat, cek untuk absen pulang
+        if ($lastAbsent) {
+            if ($lastAbsent->status == 'Pulang') {
+                return back()->with('error', 'Anda sudah melakukan absen pulang hari ini.');
+            }
+
+            if ($time < $waktuPulang->value) {
+                return back()->with('error', 'Belum waktunya pulang.');
+            }
+
+            $status = 'Pulang';
+
+            $save = AbsentsModel::create([
+                'student_id' => $student->id,
+                'date' => Carbon::now(),
+                'status' => $status,
+            ]);
+
+            if ($save) {
+                return back()->with('success', 'Absen pulang berhasil.');
+            } else {
+                return back()->with('error', 'Absen pulang gagal.');
+            }
+        }
+
+        // Logika untuk absen berangkat
+        if ($time > $waktuPulang->value) {
+            return back()->with('error', 'Anda tidak bisa absen masuk setelah waktu pulang.');
+        } elseif ($time > $batasTerlambat->format('H:i:s')) {
+            $status = 'Alpa';
+        } elseif ($time > $waktuMasuk->value) {
+            $status = 'Terlambat';
+        } else {
+            $status = 'Hadir';
         }
 
         $save = AbsentsModel::create([
             'student_id' => $student->id,
             'date' => Carbon::now(),
-            'status' => 'Hadir',
+            'status' => $status,
         ]);
 
         if ($save) {
-            return back()->with('success', 'Absent success');
+            return back()->with('success', 'Absen masuk berhasil.');
         } else {
-            return back()->with('error', 'Absent failed');
+            return back()->with('error', 'Absen masuk gagal.');
         }
     }
+
+
 }
