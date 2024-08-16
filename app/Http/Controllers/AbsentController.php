@@ -30,6 +30,10 @@ class AbsentController extends Controller
             ->orderBy('created_at', 'desc')
             ->first();
 
+        if ($lastAbsent && $lastAbsent->status == 'Alpa') {
+            return back()->with('error', 'Anda sudah absen alpa hari ini.');
+        }
+
         $time = Carbon::now()->format('H:i:s');
         $waktuMasuk = SettingsModel::where('name', 'waktu_berangkat')->first();
         $waktuPulang = SettingsModel::where('name', 'waktu_pulang')->first();
@@ -78,7 +82,9 @@ class AbsentController extends Controller
             'status' => $status,
         ]);
 
-        if ($save) {
+        if ($status == 'Alpa') {
+            return back()->with('error', 'Anda terlambat absen masuk.');
+        } elseif ($save) {
             return back()->with('success', 'Absen masuk berhasil.');
         } else {
             return back()->with('error', 'Absen masuk gagal.');
